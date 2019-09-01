@@ -4,8 +4,8 @@
   "description": "online compiler project ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "test": "mocha test.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +13,10 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0",
+    "should": "^13.2.3",
+    "supertest": "^4.0.2"
   }
 }

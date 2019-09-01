@@ -4,8 +4,8 @@ const fs = require("fs");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
-
 const codeStorageFolder = "user_codes/";
+const portNo = 9542;
 app.use(bodyParser.json());
 
 app.use(
@@ -15,39 +15,54 @@ app.use(
 );
 app.use(cors());
 app.get("/", (req, res) => {
-  res.send("Use END POINTS");
+  res.status(200);
+  res.json({ working: true });
 });
 
 app.post("/run", (req, res) => {
+  var response = {
+    output: "",
+    error: ""
+  };
   let file = req.body.filename.toString().split(".")[0];
-  let childProcess = require("child_process").spawn("java", [file]);
-  // process.stdin.pipe(childProcess.stdin);
 
-  var output = "";
-  var error = "";
-  var i = 0;
-  var inputStreams = req.body.pgmInput.toString().split("\n");
-  console.log(inputStreams);
-  while (i < inputStreams.length) {
-    console.log(i + "  " + inputStreams[i] + " " + typeof inputStreams[i]);
-    childProcess.stdin.write(inputStreams[i] + "\n");
-    i++;
-  }
-  childProcess.stdin.end();
-  childProcess.stdout.on("data", function(data) {
-    output = output + data;
-  });
-  childProcess.stderr.on("data", function(data) {
-    error = error + data;
-  });
-  childProcess.on("exit", data => {
-    var response = {
-      output: "",
-      error: ""
-    };
-    response.output = output;
-    response.error = error;
-    res.json(response);
+  //check if file is present or not
+  fs.access(req.body.filename, fs.F_OK, err => {
+    if (err) {
+      console.log(err);
+      response = {
+        output: "",
+        error: "File is not compiled/present please compile the file first"
+      };
+      res.json(response);
+    } else {
+      //file exists do the proccessing
+      let childProcess = require("child_process").spawn("java", [file]);
+      // process.stdin.pipe(childProcess.stdin);
+
+      var output = "";
+      var error = "";
+      var i = 0;
+      //inputs converted to array by spliting them on new line
+      var inputStreams = req.body.pgmInput.toString().split("\n");
+      //providing array as input to the console
+      while (i < inputStreams.length) {
+        childProcess.stdin.write(inputStreams[i] + "\n");
+        i++;
+      }
+      childProcess.stdin.end();
+      childProcess.stdout.on("data", function(data) {
+        output = output + data;
+      });
+      childProcess.stderr.on("data", function(data) {
+        error = error + data;
+      });
+      childProcess.on("exit", data => {
+        response.output = output;
+        response.error = error;
+        res.json(response);
+      });
+    }
   });
 });
 
@@ -86,13 +101,4 @@ app.post("/compile", (req, res) => {
 
   //res.send({ code: req.body.code });
 });
-
-function typeOfNaN(x) {
-  if (Number.isNaN(x)) {
-    return x;
-  }
-  if (isNaN(x)) {
-    return parseInt(x);
-  }
-}
-app.listen(9542, () => console.log("Application is working fine"));
+app.listen(portNo, () => console.log("Application is working fine"));
