@@ -1,0 +1,42 @@
+import java.util.*;  
+public class ScannerClassExample1 {    
+      public static void main(String args[]){                       
+        
+          System.out.println("--------Enter Your Details-------- ");  
+          Scanner in = new Scanner(System.in);  
+          System.out.print("Enter your name: ");    
+          String name = in.next();   
+          System.out.println("Name: " + name);           
+          System.out.print("Enter your age: ");  
+          int i = in.nextInt();  
+          System.out.println("Age: " + i);  
+          System.out.print("Enter your salary: ");  
+          double d = in.nextDouble();  
+          System.out.println("Salary: " + d);         
+          in.close();           
+          }    
+}  
+
+Jitendra
+2
+555
+
+import java.util.*;  
+public class ooo{
+public static void main(String args[]){
+System.out.println("Hello");
+}
+}
+
+import java.util.*;  
+public class addTwo{
+public static void main(String args[]){
+    Scanner sc=new Scanner(System.in);
+    int a=sc.nextInt();
+    int b=sc.nextInt();
+    System.out.println(addNo(a,b));
+}
+public int addNo(int a,int b){
+    return a+b;
+}
+}

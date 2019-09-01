@@ -21,17 +21,21 @@ app.get("/", (req, res) => {
 app.post("/run", (req, res) => {
   let file = req.body.filename.toString().split(".")[0];
   let childProcess = require("child_process").spawn("java", [file]);
+  // process.stdin.pipe(childProcess.stdin);
+
   var output = "";
   var error = "";
   var i = 0;
+  var inputStreams = req.body.pgmInput.toString().split("\n");
+  console.log(inputStreams);
+  while (i < inputStreams.length) {
+    console.log(i + "  " + inputStreams[i] + " " + typeof inputStreams[i]);
+    childProcess.stdin.write(inputStreams[i] + "\n");
+    i++;
+  }
+  childProcess.stdin.end();
   childProcess.stdout.on("data", function(data) {
-    if (i == 0) {
-      childProcess.stdin.write(req.body.pgmInput);
-      childProcess.stdin.end();
-      i++;
-    } else {
-      output = output + data;
-    }
+    output = output + data;
   });
   childProcess.stderr.on("data", function(data) {
     error = error + data;
@@ -46,8 +50,10 @@ app.post("/run", (req, res) => {
     res.json(response);
   });
 });
+
 app.post("/compile", (req, res) => {
-  let filename = req.body.filename;
+  var filename = req.body.filename.toString();
+  console.log(filename);
   if (filename.split(".").length < 2) {
     res.send({
       errors: "Invalid filename",
@@ -80,4 +86,13 @@ app.post("/compile", (req, res) => {
 
   //res.send({ code: req.body.code });
 });
+
+function typeOfNaN(x) {
+  if (Number.isNaN(x)) {
+    return x;
+  }
+  if (isNaN(x)) {
+    return parseInt(x);
+  }
+}
 app.listen(9542, () => console.log("Application is working fine"));
