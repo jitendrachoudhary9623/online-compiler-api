@@ -2,8 +2,10 @@ const express = require("express");
 const app = express();
 const fs = require("fs");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const path = require("path");
 
-var bodyParser = require("body-parser");
+const codeStorageFolder = "user_codes/";
 app.use(bodyParser.json());
 
 app.use(
@@ -13,15 +15,14 @@ app.use(
 );
 app.use(cors());
 app.get("/", (req, res) => {
-  res.send("Default Path");
+  res.send("Use END POINTS");
 });
 
 app.post("/run", (req, res) => {
-  file = req.body.filename.toString().split(".")[0];
+  let file = req.body.filename.toString().split(".")[0];
   let childProcess = require("child_process").spawn("java", [file]);
   var output = "";
   var error = "";
-  console.log(req.body.pgmInput);
   var i = 0;
   childProcess.stdout.on("data", function(data) {
     if (i == 0) {
@@ -36,7 +37,6 @@ app.post("/run", (req, res) => {
     error = error + data;
   });
   childProcess.on("exit", data => {
-    console.log("request complete");
     var response = {
       output: "",
       error: ""
@@ -47,24 +47,25 @@ app.post("/run", (req, res) => {
   });
 });
 app.post("/compile", (req, res) => {
-  console.log(req.body.code);
-  fs.writeFile("" + req.body.filename, req.body.code, err => {
-    if (err) console.log(err);
-    console.log("Successfully Written to File.");
-    let childProcess = require("child_process").spawn("javac", [
-      req.body.filename
-    ]);
-    var noOfErrors = "";
-    childProcess.stdout.on("data", function(data) {
-      console.log("Read Output " + data);
+  let filename = req.body.filename;
+  if (filename.split(".").length < 2) {
+    res.send({
+      errors: "Invalid filename",
+      success: false
     });
+    res.end();
+    return;
+  }
+  fs.writeFile(filename, req.body.code, err => {
+    if (err) console.log(err);
+    let childProcess = require("child_process").spawn("javac", [filename]);
+    var noOfErrors = "";
+    childProcess.stdout.on("data", function(data) {});
 
     childProcess.stderr.on("data", function(data) {
-      console.log("error " + data);
       noOfErrors = noOfErrors + data;
     });
     childProcess.on("exit", data => {
-      console.log("complete " + data);
       var response = {
         errors: "",
         success: false
