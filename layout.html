@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<body style="height:100vh;width:100vw;">
+    <div class="container-fluid">
+        <div class="row" style="height:10vh;">
+            <div class="col-md-6"> <button class="btn shadow" style="padding:2%;margin:0.5%;border:1px solid black;"
+                    disabled>Section 1
+                </button>
+
+                <button class="btn shadow" style="padding:2%;margin:0.5%;border:1px solid black;" disabled>
+                    Section
+                    2 </button>
+                <button class="btn shadow" style="padding:2%;margin:0.5%;border:1px solid black;" disabled>
+                    Section
+                    3 </button>
+
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-info" style="padding:2%;margin:0.5%;" disabled>Total Questions Answered 5
+                </button>
+
+                <button class="btn btn-danger" style="padding:2%;margin:0.5%;" disabled>0 : 00 </button>
+                <button class="btn btn-warning" style="padding:2%;margin:0.5%;" disabled> Username </button>
+                <button class="btn btn-primary" style="padding:2%;margin:0.5%;" disabled> Test Id </button>
+
+            </div>
+        </div>
+        <div class="row" style="height:80vh;">
+            <div class="col-md-1 shadow-lg card " style="margin-top:1.5%;">
+                <div class="row card shadow bg-danger"
+                    style="color:white;margin:2%;margin-top:3%;padding:2.5%;text-align: center;">
+                    Question
+                    <br /> 1
+                </div>
+            </div>
+            <div class="col-md-9 shadow-lg card questionSetter" style="padding:2%;background-color:rgb(235, 224, 224) ">
+                <div class="row card shadow mb-4 p-5" id="q">A train passes a station platform in 36 seconds and a man
+                    standing on the platform in 20 seconds. If the speed of the train is 54 km/hr, what is the length of
+                    the platform? A train passes a station platform in 36 seconds and a man
+                    standing on the platform in 20 seconds. If the speed of the train is 54 km/hr, what is the length of
+                    the platform? A train passes a station platform in 36 seconds and a man
+                    standing on the platform in 20 seconds. If the speed of the train is 54 km/hr, what is the length of
+                    the platform? A train passes a station platform in 36 seconds and a man
+                    standing on the platform in 20 seconds. If the speed of the train is 54 km/hr, what is the length of
+                    the platform? A train passes a station platform in 36 seconds and a man
+                    standing on the platform in 20 seconds. If the speed of the train is 54 km/hr, what is the length of
+                    the platform? daqsf</div>
+                <div class="row card shadow mb-4 p-4" id="o1" onclick="answerSelected(1);">120 m</div>
+                <div class="row card shadow mb-4 p-4" id="o2" onclick="answerSelected(2);">240 m</div>
+                <div class="row card shadow mb-4 p-4" id="o3" onclick="answerSelected(3);">300 m</div>
+                <div class="row card shadow mb-4 p-4" id="o4" onclick="answerSelected(4);">None of these</div>
+                <script>
+                    function answerSelected(num) {
+                        clearAll();
+                        $("#o" + num).css("background-color", "green");
+                        $("#o" + num).css("color", "white");
+
+
+
+
+                    }
+                    function clearAll() {
+                        for (var i = 1; i <= 4; i++) {
+                            $("#o" + i).css("background-color", "white");
+                            $("#o" + i).css("color", "black");
+                        }
+                    }
+                </script>
+            </div>
+            <div class="col-md-2 shadow-lg card" style="background-color:rgb(235, 221, 221) ">
+
+                <div class="row">
+                    <div class="col-md-10 shadow card p-3" style="margin:4%;">
+                        <b> Question Set</b>
+                    </div>
+                </div>
+                {% for set in questions %}
+                <div class="row" style="padding: 3%;margin:2%;background-color: white;">
+                    {% for q in set %}
+                    <button class="btn btn-warning shadow col-md-3 p-3 mb-1" id="q{{q}}"
+                        style="padding:2%;margin:0.5%;border:1px solid black;" disabled>
+                        {{q}}</button>
+                    {% endfor %}
+                </div>
+                <script>
+                    $('#q{{q}}').click(function (q) {
+                        $('#q{{q}}').val("clicked");
+                    });
+                </script>
+                {% endfor %}
+
+            </div>
+        </div>
+        <div class="row shadow card" style="height:10vh;">
+            <div class="col-md-6" style="margin-left:50%;margin-top:0.5%;">
+                <button value="Previous" id="previousQuestion" class=" btn btn-info btn-lg">Previous</button>
+                <button value="Clear" id="clearQuestion" class="btn btn-danger btn-lg"
+                    onclick="clearAll();">Clear</button>
+                <button value="Next" id="nextQuestion" class="btn btn-success btn-lg">Next</button>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+<style>
+    .questionSetter {
+        max-height: 80vh;
+        overflow-y: scroll;
+    }
+</style>
+
+</html>
