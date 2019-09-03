@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/run", (req, res) => {
+  console.log("Its working run");
   var response = {
     output: "",
     error: ""

@@ -1,13 +1,13 @@
 const supertest = require("supertest");
 const should = require("should");
 
-var server = supertest.agent("http://localhost:9542");
+var server = supertest.agent("http://13.127.244.35:9542");
 
 describe("Test Cases For Checking if Api is working or not", function() {
   it("check if api works or not", function(done) {
     server
       .get("/")
-      .expect(200) // THis is HTTP response
+      .expect(200)
       .end(function(err, res) {
         res.body.working.should.equal(true);
         done();
